@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">Search Sharable Rides</h2>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <form method="get">
+            {% for field in form %}
+            <div class="mb-4">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <p class="text-gray-600 text-xs italic">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <p class="text-red-500 text-xs italic">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">
+                Search Rides
+            </button>
+        </form>
+    </div>
+
+    {% if available_rides %}
+        <div class="grid gap-6">
+            {% for ride in available_rides %}
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold">{{ ride.destination }}</h3>
+                    <p class="text-gray-600">Arrival: {{ ride.arrival_time|date:"F j, Y, g:i a" }}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p><strong>Available Seats:</strong> {{ ride.total_passengers }}</p>
+                        {% if ride.vehicle_type %}
+                            <p><strong>Vehicle Type:</strong> {{ ride.vehicle_type|title }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {% if ride.special_request %}
+                            <p><strong>Special Request:</strong> {{ ride.special_request }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <a href="{% url 'join_ride' ride.pk %}" class="bg-green-500 text-white rounded px-4 py-2 hover:bg-green-600">
+                        Join Ride
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% elif form.is_bound %}
+        <div class="text-center py-8">
+            <p class="text-gray-600">No matching rides found.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
