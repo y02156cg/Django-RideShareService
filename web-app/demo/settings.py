@@ -146,3 +146,8 @@ DEFAULT_FROM_EMAIL = 'noreply@rideshare.com'
 
 # Message settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
